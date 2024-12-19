@@ -1,0 +1,4 @@
+all:
+     gcc lab10.c obrazy.c -DDEBUG -o lab10 && ./lab10
+# all:
+# gcc lab10.c obrazy.c -o lab10 && ./lab10
