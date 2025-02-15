@@ -3,7 +3,7 @@
 #include <string.h>
 #include <time.h>
 
-#define N 100
+int N = 100;
 
 
 struct Student{
@@ -74,7 +74,7 @@ void countingSort(struct Student *students, int *tc){
         help_array[students[i].total_score]--;
     }
     for (int i = 0; i < N; i++) {
-        students[i] = new_students[i];
+        students[N-i-1] = new_students[i];
     }
     int t2 = clock();
 
@@ -98,7 +98,7 @@ void Fill(struct Student *students){
 int main(){
     srand(time(NULL));
 
-    struct Student students[N];
+    struct Student students[100000];
     Fill(students);
 
     printf("До сортировки:\n");
@@ -106,11 +106,11 @@ int main(){
         printStudentInfo(students[i]);
     }
 
-    int ts;
+    int ts = 0;
     selectionSort(students,&ts);
 
     Fill(students);
-    int tc;
+    int tc = 0;
     countingSort(students,&tc);
     
     printf("после сортировки:\n");
@@ -125,9 +125,44 @@ int main(){
     printf("\n");
     printf("\n");
 
+    
+    
+    N = 10000;
+
+    Fill(students);
+    ts = 0;
+    selectionSort(students,&ts);
+
+    Fill(students);
+    tc = 0;
+    countingSort(students,&tc);
+
+    printf("\n");
+    printf("counting %f sec", ((float)tc)/ CLOCKS_PER_SEC);
+    printf("\n");
+    printf("selection %f sec", ((float)ts)/ CLOCKS_PER_SEC);
+    printf("\n");
+    printf("\n");
+     
+    N = 100000;
+
+    Fill(students);
+    ts = 0;
+    selectionSort(students,&ts);
+
+    Fill(students);
+    tc = 0;
+    countingSort(students,&tc);
+
+    printf("\n");
+    printf("counting %f sec", ((float)tc)/ CLOCKS_PER_SEC);
+    printf("\n");
+    printf("selection %f sec", ((float)ts)/ CLOCKS_PER_SEC);
+    printf("\n");
+    printf("\n");
+     
     system("sed '5!d' /proc/cpuinfo");
     system("sed '8!d' /proc/cpuinfo");
-
 
 }
 // A + rand() % ((B + 1) - A)
