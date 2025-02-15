@@ -65,7 +65,6 @@ int sred(int * A, int n){
     printf("%d",sum_for_sred/n);
 }
 
-
 int main(){
     int n;
     printf("Число n: ");
