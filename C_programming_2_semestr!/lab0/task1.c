@@ -59,7 +59,8 @@ void countingSort(struct Student *students, int *tc){
     int t1 = clock();
     int max_element = 300;
     int help_array[max_element+1];
-    struct Student new_students[N];
+    // struct Student new_students[N]; Стек переполняетсяяяя((((((
+    struct Student *new_students = (struct Student*)malloc(N * sizeof(struct Student));
     for (int i = 0; i < max_element+1; i++) {
         help_array[i] = 0;
     }
@@ -79,6 +80,7 @@ void countingSort(struct Student *students, int *tc){
     int t2 = clock();
 
     *tc = t2-t1;
+    free(new_students);
     
 }
 
@@ -119,6 +121,9 @@ int main(){
     }
 
     printf("\n");
+    printf("\n");
+    printf("N = 100");
+    printf("\n");
     printf("counting %f sec", ((float)tc)/ CLOCKS_PER_SEC);
     printf("\n");
     printf("selection %f sec", ((float)ts)/ CLOCKS_PER_SEC);
@@ -138,6 +143,9 @@ int main(){
     countingSort(students,&tc);
 
     printf("\n");
+    printf("\n");
+    printf("N = 10000");
+    printf("\n");
     printf("counting %f sec", ((float)tc)/ CLOCKS_PER_SEC);
     printf("\n");
     printf("selection %f sec", ((float)ts)/ CLOCKS_PER_SEC);
@@ -154,6 +162,9 @@ int main(){
     tc = 0;
     countingSort(students,&tc);
 
+    printf("\n");
+    printf("\n");
+    printf("N = 100000");
     printf("\n");
     printf("counting %f sec", ((float)tc)/ CLOCKS_PER_SEC);
     printf("\n");
