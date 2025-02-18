@@ -84,6 +84,44 @@ void countingSort(struct Student *students, int *tc){
     
 }
 
+void swap(struct Student *a, struct Student *b) {
+    struct Student temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+int partition(struct Student *arr, int low, int high) {
+    int pivot = arr[high].total_score; 
+    int i = (low - 1 ); 
+
+    for (int j = low; j < high; j++) {
+        
+        if (arr[j].total_score <= pivot) {
+            i++; 
+            swap(&arr[i], &arr[j]);
+        }
+    }
+    swap(&arr[i + 1], &arr[high]); 
+    return (i + 1);
+}
+
+int quickSort(struct Student *arr, int low, int high) {
+    int t1 = clock();
+    if (low < high) {
+        // находим индекс разделения
+        int pi = partition(arr, low, high);
+
+        // рекурсивно сортируем элементы до и после разделения
+        quickSort(arr, low, pi - 1);
+        quickSort(arr, pi + 1, high);
+    }
+    else{
+        return(0);
+    }
+    int t2 = clock();
+    return(t2-t1);
+}
+
 void Fill(struct Student *students){
     for (int i = 0; i < N; i++){
         int size_name = 5 + 5;//rand() % ((64 + 1) - 5);
@@ -114,6 +152,9 @@ int main(){
     Fill(students);
     int tc = 0;
     countingSort(students,&tc);
+
+    Fill(students);
+    int tq = quickSort(students,0, N-1);
     
     printf("после сортировки:\n");
     for (int i = 0; i < N; i++) {
@@ -127,6 +168,8 @@ int main(){
     printf("counting %f sec", ((float)tc)/ CLOCKS_PER_SEC);
     printf("\n");
     printf("selection %f sec", ((float)ts)/ CLOCKS_PER_SEC);
+    printf("\n");
+    printf("quick %f sec", ((float)tq)/ CLOCKS_PER_SEC);
     printf("\n");
     printf("\n");
 
@@ -142,6 +185,9 @@ int main(){
     tc = 0;
     countingSort(students,&tc);
 
+    Fill(students);
+    tq = quickSort(students,0, N-1);
+
     printf("\n");
     printf("\n");
     printf("N = 10000");
@@ -149,6 +195,8 @@ int main(){
     printf("counting %f sec", ((float)tc)/ CLOCKS_PER_SEC);
     printf("\n");
     printf("selection %f sec", ((float)ts)/ CLOCKS_PER_SEC);
+    printf("\n");
+    printf("quick %f sec", ((float)tq)/ CLOCKS_PER_SEC);
     printf("\n");
     printf("\n");
      
@@ -162,6 +210,9 @@ int main(){
     tc = 0;
     countingSort(students,&tc);
 
+    Fill(students);
+    tq = quickSort(students,0, N-1);
+
     printf("\n");
     printf("\n");
     printf("N = 100000");
@@ -169,6 +220,8 @@ int main(){
     printf("counting %f sec", ((float)tc)/ CLOCKS_PER_SEC);
     printf("\n");
     printf("selection %f sec", ((float)ts)/ CLOCKS_PER_SEC);
+    printf("\n");
+    printf("quick %f sec", ((float)tq)/ CLOCKS_PER_SEC);
     printf("\n");
     printf("\n");
      
