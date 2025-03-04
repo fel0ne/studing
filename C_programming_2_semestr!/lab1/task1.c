@@ -38,50 +38,139 @@ void printList(node_t *head){
 }
 
 node_t * linkLists(node_t *head, node_t *head1, int n) {
-    node_t *current = head;    // Upper list (e.g., a1, a3, a(n-1))
-    node_t *current1 = head1;  // Lower list (e.g., a2, a4, a(n))
+        node_t *current = head;    
+    node_t *current1 = head1;  
+    node_t *tail = NULL; 
+    node_t *tail_tmp = NULL; 
     current1->next1 = current;
-    while (current->next != NULL || current1->next != NULL) {
+    while (current->next != NULL && current1->next != NULL) {
+            current = current->next;
             current1 = current1->next; 
-            current = current->next; 
-            
-
             current->next1 = current1;
     }
+
+    
+    while ( tail != head1->next) {
+        current1 = head1;
+        while ( current1->next != tail) {
+                current1 = current1->next; 
+                tail_tmp = current1;
+        }
+        tail=tail_tmp;
+        current1 = head1;
+        while(current1->next != tail){
+            current1 = current1->next;
+        }
+        tail->next = current1;
+    }
+    head1->next = NULL;
 
     return(head);
 }
 
+
+void reverseList(node_t **head) {
+    node_t *prev, *curr, *next;
+    curr=*head;
+    prev=NULL;
+    while (curr!=NULL) {
+        next=curr->next;
+        curr->next = prev;
+        prev = curr;
+        curr = next;
+    }
+    *head=prev;
+}
+
 void navigateList(node_t *S) {
-    node_t *head_tmp = S;
+    int reg = 0;
     node_t *current = S;
     char input;
-    while (1) {
-        printf("Текущее значение: %d\n", current->data);
-        printf("Введите команду (D/6 - вправо, W/8 - вверх/вниз, Q - выход): ");
+    
+    while(1){
+        printf("текущий элемент: %d \n", current->data);
         scanf(" %c", &input);
-        if (input == 'D' || input == '6') { 
-            if (current->next != NULL) {
+        if (input == '6'){
+            if((current->next != NULL) && (reg == 0)){
                 current = current->next;
-            } else {
-                printf("Достигнут конец списка.\n");
             }
-        } else if (input == 'A' || input == '4') {
-            printf("Невозможно переместиться влево\n");
-        } else if (input == 'W' || input == '8') {
-            if (current->next1 != NULL) {
-                current = current->next1;
-            } else {
-                printf("Нет связанного элемента в этом направлении.\n");
+            else{
+                printf("передвежение вправо не возможно(вернутся в начало R, enter пропустить)\n ");
+                char tmp;
+                scanf(" %c", &tmp);
+                if((tmp =='R')|| (tmp == 'r')){
+                    current = S;
+                }
+                else if((tmp == 'q')||(tmp == 'Q')){
+                        break;
+                }
+                else{
+                    continue;
+                }
             }
-        } else if (input == 'S' || input == '2') {
-            printf("Невозможно переместиться вниз\n");
-        } else if (input == 'Q' || input == 'q') {
-            break;
-        } else {
-            printf("Неверная команда. Попробуйте снова.\n");
         }
+        else if (input == '4'){
+            if((current->next != NULL) && (reg == 1)){
+                current = current->next;
+            }
+            else{
+                printf("передвежение влево не возможно(вернутся в начало R, enter пропустить) \n");
+                char tmp;
+                scanf(" %c", &tmp);
+                if((tmp =='R')|| (tmp == 'r')){
+                    current = S;
+                }
+                else if((tmp == 'q')||(tmp == 'Q')){
+                        break;
+                }
+                else{
+                    continue;
+                }
+            }
+        }
+        else if (input == '2'){
+            if((current->next1 != NULL) && (reg == 0)){
+                current = current->next1;
+                reg = 1;
+            }
+            else{
+                printf("передвежение вниз не возможно(вернутся в начало R, enter пропустить) \n");
+                char tmp;
+                scanf(" %c", &tmp);
+                if((tmp =='R')|| (tmp == 'r')){
+                    current = S;
+                }
+                else if((tmp == 'q')||(tmp == 'Q')){
+                        break;
+                }
+                else{
+                    continue;
+                }
+            }
+        }
+        else if (input == '8'){
+            if((current->next1 != NULL) && (reg == 1)){
+                current = current->next1;
+                reg = 0;
+            }
+            else{
+                printf("передвежение вверх не возможно(вернутся в начало R, q выйти)\n ");
+                char tmp;
+                scanf(" %c", &tmp);
+                if((tmp =='R')|| (tmp == 'r')){
+                    current = S;
+                }
+                else if((tmp == 'q')||(tmp == 'Q')){
+                        break;
+                }
+                else{
+                    continue;
+                }
+            }
+        }
+        //printf("текущий элемент: %d \n", current->data);
     }
+
 }
 
 int main(){
@@ -121,16 +210,17 @@ int main(){
     printList(head);
     printf("Второй список: ");
     printList(head1);
+    //reverseList(&head1);
 
     S = linkLists(head, head1, counter);
 
     printf("\nСписки связаны.\n");
 
     
-    printf("\nПервый список: ");
-    printList(head);
-    printf("Второй список: ");
-    printList(head1);
+    // printf("\nПервый список: ");
+    // printList(head);
+    // printf("Второй список: ");
+    // printList(head1);
 
     navigateList(S);
 
