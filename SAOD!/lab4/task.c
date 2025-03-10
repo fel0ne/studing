@@ -149,7 +149,7 @@ void selectionSort(int * A, int n, int * M, int * C){
 int main(){
 
 
-
+    srand(time(NULL));
     int M100i,M200i,M300i,M400i,M500i;
     int C100i,C200i,C300i,C400i,C500i;
 
