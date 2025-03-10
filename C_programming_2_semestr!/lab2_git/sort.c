@@ -1,4 +1,4 @@
-void ShakerrSort(int * A, int n, int * M, int * C){
+void ShakerSort(int * A, int n, int * M, int * C){
     int L = 0;
     int R = n-1;
     int k = n-1;
