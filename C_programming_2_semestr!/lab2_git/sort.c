@@ -1,25 +1,24 @@
-void ShakerSort(int * A, int n, int * M, int * C){//12345
+void ShakerSort(int * A, int n){//12345
     int L = 0;
     int R = n-1;
     int k = n-1;
 
-    (*M) = 0;
-    (*C) = 0;
+ 
     do{
         for(int j = R ; j > L ; j--){
-            (*C)++;if (A[j]<A[j-1]){
-                (*M)++;int tmp = A[j];
-                (*M)++;A[j] = A[j-1];
-                (*M)++;A[j-1] = tmp;
+            if (A[j]<A[j-1]){
+                int tmp = A[j];
+                A[j] = A[j-1];
+                A[j-1] = tmp;
                 k = j;
             }
         }
         L = k;
         for(int j = L ; j < R; j++){
-            (*C)++;if (A[j]>A[j+1]){
-                (*M)++;int tmp = A[j];
-                (*M)++;A[j] = A[j+1];
-                (*M)++;A[j+1] = tmp;
+            if (A[j]>A[j+1]){
+                int tmp = A[j];
+                A[j] = A[j+1];
+                A[j+1] = tmp;
                 k = j;
             }
         }
@@ -27,4 +26,8 @@ void ShakerSort(int * A, int n, int * M, int * C){//12345
 
     }while(L<R);
 
+}
+int main(){
+    int a[] = {4, 2};
+    ShakerSort(a,2);
 }
