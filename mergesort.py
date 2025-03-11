@@ -1,5 +1,5 @@
 from heapq import merge
-<<<<<<< HEAD
+
 
 def merge_sort2(m):
     """Sort list, using two part merge sort"""
@@ -44,8 +44,8 @@ def merge_sort4(m):
 
     # Merge and return
     return list(merge(first, second, third, last))
-=======
->>>>>>> Mergesort-Impl
+
+
 
 def merge_sort2(m):
     """Sort list, using two part merge sort"""
