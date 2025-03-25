@@ -87,7 +87,7 @@ void selectionSortMod(int * A, int n, int * M, int * C){
     for(int i = 0; i < n-1; i++){
         int k = i;//(*M)++;
         for (int j = i+1; j < n; j++){
-            (*C)++;if(A[j] < A[k]){
+            (*C)++;if(A[j] > A[k]){
                 k = j;//(*M)++;
             }
         }

@@ -69,9 +69,9 @@ void selectionSort(int * A, int n, int * M, int * C){
     (*M) = 0;
     (*C) = 0;
     for(int i = 0; i < n-1; i++){
-        int k = i;//(*M)++;
+        int k = i;//(*M)++;cd
         for (int j = i+1; j < n; j++){
-            (*C)++;if(A[j] < A[k]){
+            (*C)++;if(A[j] > A[k]){
                 k = j;//(*M)++;
             }
         }
@@ -118,7 +118,7 @@ int main(){
         A1[i] = 1;
     }
     
-    FillDec(A,10);
+    Fillinc(A,10);
     PrintMas(A,10);
     printf("\n");
     selectionSort(A,10,&Md10,&Cd10);
