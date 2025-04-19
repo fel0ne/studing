@@ -1,0 +1,4 @@
+/home/felone/studing/C_programming_2_semestr!/lab6/build/CMakeFiles/MyLib.dir
+/home/felone/studing/C_programming_2_semestr!/lab6/build/CMakeFiles/myapp.dir
+/home/felone/studing/C_programming_2_semestr!/lab6/build/CMakeFiles/edit_cache.dir
+/home/felone/studing/C_programming_2_semestr!/lab6/build/CMakeFiles/rebuild_cache.dir
