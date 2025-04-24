@@ -11,3 +11,10 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+body, html {
+  margin: 0;
+  padding: 0;
+  width: 100%; /* Или 100vw */
+  height: 100%; /* Или 100vh */
+  overflow-x: hidden; /* Скрывает горизонтальную прокрутку */
+}

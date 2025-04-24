@@ -1,10 +1,20 @@
+#models.py
+
 # Импорт необходимых модулей Django
 from django.db import models
 from django.contrib.auth.models import User  # Стандартная модель пользователя
+from .validators import validate_video_file  # Добавляем новый импорт
 
 # Модель для хранения информации о видео
 class Video(models.Model):
     """Модель представляет видеофайл и связанные с ним данные"""
+
+    thumbnail = models.ImageField(
+        upload_to='thumbnails/', # Миниатюры будут храниться в подпапке thumbnails/
+        verbose_name='Миниатюра',
+        null=True, # Позволяет полю быть пустым в базе данных
+        blank=True # Позволяет полю быть пустым в формах
+    )
     
     # Заголовок видео: строка до 200 символов
     title = models.CharField(
@@ -19,7 +29,7 @@ class Video(models.Model):
     
     # Поле для загрузки видеофайла
     # Файлы сохраняются в подпапку videos/ медиа-директории
-    file = models.FileField(
+    video = models.FileField(
         upload_to='videos/',
         verbose_name='Видеофайл'
     )

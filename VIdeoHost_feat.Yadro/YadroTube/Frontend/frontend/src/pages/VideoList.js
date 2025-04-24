@@ -1,7 +1,7 @@
 // src/pages/VideoList.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-
+import VideoCard from '../components/VideoCard';
 const VideoList = () => {
   const [videos, setVideos] = useState([]);
 
@@ -19,3 +19,4 @@ const VideoList = () => {
     </div>
   );
 };
+export default VideoList;
