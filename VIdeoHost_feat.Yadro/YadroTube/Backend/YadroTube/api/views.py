@@ -8,11 +8,11 @@ from .serializers import RegistrationSerializer
 from rest_framework import status
 
 
-from rest_framework.generics import RetrieveAPIView, ListAPIView, DestroyAPIView
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.generics import RetrieveAPIView, ListAPIView, DestroyAPIView, ListCreateAPIView # <--- ДОБАВЬТЕ ListCreateAPIView сюда
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, AllowAny, IsAuthenticated
 from django.contrib.auth.models import User
-from .models import Video
-from .serializers import UserSerializer, VideoSerializer
+from .models import Video, Comment
+from .serializers import UserSerializer, VideoSerializer, CommentSerializer
 from .permissions import IsVideoOwner
 
 MOVIEPY_INSTALLED = False
@@ -177,3 +177,37 @@ class RegistrationAPIView(generics.GenericAPIView):
             "user": RegistrationSerializer(user, context=self.get_serializer_context()).data,
             "message": "Пользователь успешно зарегистрирован.",
         }, status=status.HTTP_201_CREATED)
+class VideoCommentsListCreateView(ListCreateAPIView):
+    """
+    API View для списка комментариев к видео (GET) и создания нового комментария (POST).
+    GET доступен всем, POST - только авторизованным.
+    """
+    serializer_class = CommentSerializer
+    # Устанавливаем разрешения: для чтения (GET, HEAD, OPTIONS) разрешено всем (AllowAny),
+    # для записи (POST, PUT, PATCH, DELETE) - только авторизованным (IsAuthenticated).
+    # IsAuthenticatedOrReadOnly не подойдет, т.к. нам нужен разный уровень доступа.
+    permission_classes = [AllowAny] # Начальное разрешение
+
+    # Получаем видео по ID из URL (например, из <int:video_id>)
+    def get_queryset(self):
+        video_id = self.kwargs['video_id']
+        # Убедитесь, что видео существует, прежде чем пытаться получить комментарии
+        video = Video.objects.filter(pk=video_id).first()
+        if video:
+            return Comment.objects.filter(video=video)
+        return Comment.objects.none() # Возвращаем пустой QuerySet, если видео нет
+
+    # Переопределяем perform_create для автоматического связывания комментария с видео и пользователем
+    def perform_create(self, serializer):
+         video_id = self.kwargs['video_id']
+         video = Video.objects.get(pk=video_id) # Получаем объект видео
+         # Сохраняем комментарий, связывая его с видео и текущим авторизованным пользователем
+         serializer.save(video=video, author=self.request.user)
+
+    # Устанавливаем разные разрешения для GET и POST
+    def get_permissions(self):
+        if self.request.method == 'POST':
+            # Для POST запросов требуется аутентификация
+            return [IsAuthenticated()]
+        # Для всех остальных методов (GET, HEAD, OPTIONS) разрешено всем
+        return [AllowAny()]

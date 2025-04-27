@@ -1,0 +1,191 @@
+/* src/components/VideoComments.css */
+
+/* Контейнер для всего блока комментариев */
+.video-comments-container {
+    display: flex;
+    flex-direction: column;
+    /* height: 100%;  <-- Убираем или заменяем, если нужна фиксированная высота */
+
+    /* --- ДОБАВЛЕНО: Фиксированная высота для контейнера комментариев --- */
+    height: 600px; /* Пример: задайте нужную вам фиксированную высоту в px, vh или другом unit */
+    /* Или можно задать max-height, если нужна максимальная высота, но не фиксированная */
+    /* max-height: 600px; */
+    /* --- Конец добавленного --- */
+
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box; /* Учитываем padding в размере */
+}
+/* Заголовок "Комментарии" */
+.comments-title {
+    text-align: center; /* Выравнивание по центру */
+    color: #343a40; /* Темный цвет текста */
+    margin-top: 0; /* Убираем верхний отступ по умолчанию */
+    margin-bottom: 20px; /* Отступ снизу */
+    font-size: 1.5em; /* Размер шрифта */
+    border-bottom: 1px solid #e9ecef; /* Линия под заголовком */
+    padding-bottom: 15px; /* Отступ под линией */
+}
+
+/* Блок для списка комментариев */
+.comments-list {
+    flex-grow: 1; /* Это важно: список займет доступное пространство */
+    overflow-y: auto; /* Это важно: добавляет вертикальную прокрутку */
+    padding-right: 15px;
+    margin-bottom: 20px;
+    scrollbar-width: thin;
+    scrollbar-color: #007bff #f8f9fa;
+}
+
+/* Стили для скроллбара в Webkit (Chrome, Safari) */
+.comments-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+.comments-list::-webkit-scrollbar-track {
+    background: #f8f9fa;
+    border-radius: 10px;
+}
+
+.comments-list::-webkit-scrollbar-thumb {
+    background-color: #007bff;
+    border-radius: 10px;
+    border: 2px solid #f8f9fa;
+}
+
+
+/* Стили для отдельного комментария */
+.comment-item {
+    margin-bottom: 15px; /* Отступ между комментариями */
+    padding-bottom: 15px; /* Отступ снизу внутри элемента */
+    border-bottom: 1px solid #e9ecef; /* Разделитель */
+    word-wrap: break-word; /* Перенос длинных слов */
+}
+
+.comment-item:last-child {
+    border-bottom: none; /* Убираем разделитель у последнего комментария */
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+/* Имя автора */
+.comment-author {
+    color: #007bff; /* Синий цвет для имени автора */
+    font-weight: bold; /* Жирный шрифт */
+    margin-right: 5px; /* Небольшой отступ после имени */
+}
+
+/* Текст комментария */
+.comment-text {
+    line-height: 1.5; /* Межстрочный интервал */
+    color: #495057; /* Цвет текста комментария */
+}
+
+/* Дата и время комментария */
+.comment-timestamp {
+    font-size: 0.8em; /* Размер шрифта меньше */
+    color: #868e96; /* Более светлый цвет */
+    margin-top: 5px; /* Отступ сверху */
+    text-align: right; /* Выравнивание по правому краю */
+}
+
+/* Сообщение, если комментариев нет */
+.no-comments {
+    text-align: center;
+    color: #888;
+    font-style: italic; /* Курсив */
+    margin-top: 20px;
+}
+
+/* Форма для добавления нового комментария */
+.comment-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Промежуток между элементами формы */
+    padding-top: 15px; /* Отступ сверху от списка комментариев */
+    border-top: 1px solid #e9ecef; /* Линия над формой */
+}
+
+/* Поле ввода текста комментария */
+.comment-textarea {
+    width: 100%;
+    padding: 12px; /* Внутренние отступы */
+    border-radius: 5px;
+    border: 1px solid #ced4da;
+    font-size: 1em;
+    box-sizing: border-box;
+    resize: vertical; /* Разрешить изменение размера только по вертикали */
+    font-family: inherit; /* Наследуем шрифт от родителя */
+}
+
+.comment-textarea:focus {
+    outline: none; /* Убираем стандартную обводку при фокусе */
+    border-color: #007bff; /* Синяя рамка при фокусе */
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); /* Легкая тень при фокусе */
+}
+
+/* Кнопка отправки */
+.comment-button {
+    padding: 10px 20px; /* Внутренние отступы */
+    background-color: #007bff; /* Синий фон */
+    color: white; /* Белый текст */
+    border: none; /* Убираем рамку */
+    border-radius: 5px;
+    cursor: pointer; /* Курсор в виде руки */
+    font-size: 1em;
+    font-weight: bold;
+    align-self: flex-end; /* Выравнивание по правому краю */
+    transition: background-color 0.2s ease; /* Плавный переход цвета */
+}
+
+/* Стили для кнопки в отключенном состоянии */
+.comment-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed; /* Курсор "запрещено" */
+}
+
+/* Эффект наведения на кнопку (если не отключена) */
+.comment-button:hover:not(:disabled) {
+    background-color: #0056b3; /* Более темный синий при наведении */
+}
+
+/* Сообщение об ошибке под формой */
+.comment-post-error {
+    color: #dc3545; /* Красный цвет */
+    font-size: 0.9em;
+    margin-bottom: 10px;
+    text-align: left;
+}
+
+
+/* Сообщение для неавторизованных пользователей */
+.login-prompt {
+    text-align: center;
+    color: #555;
+    font-size: 1em;
+    padding-top: 20px;
+    border-top: 1px solid #e9ecef; /* Линия над сообщением */
+}
+
+/* Ссылка в сообщении для неавторизованных (опционально) */
+.login-prompt .login-link {
+    color: #007bff;
+    text-decoration: underline;
+}
+
+/* Сообщение об ошибке загрузки списка комментариев */
+.comments-error-list {
+    color: #dc3545;
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* Индикатор загрузки комментариев */
+.comments-loading {
+     text-align: center;
+     color: #555;
+     font-style: italic;
+     margin-top: 20px;
+}

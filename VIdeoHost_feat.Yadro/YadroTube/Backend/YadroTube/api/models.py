@@ -52,3 +52,14 @@ class Video(models.Model):
     # Строковое представление объекта (для админки и отладки)
     def __str__(self):
         return self.title
+class Comment(models.Model):
+    video = models.ForeignKey(Video, on_delete=models.CASCADE, related_name='comments')
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    text = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['created_at'] # Сортировка комментариев по времени
+
+    def __str__(self):
+        return f'Comment by {self.author.username} on {self.video.title[:20]}'
