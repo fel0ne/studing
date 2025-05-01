@@ -3,12 +3,16 @@
 #include <pthread.h>
 #include <unistd.h>
 #define NUM_THREADS 4
+void  *messagedeth(a){
+    
+}
 
 void *routine(void *arg) {
     char **messages = (char **)arg;
     for (int i = 0; messages[i] != NULL; i++) {
+        sleep(3);
         printf("%s (TID: %ld)\n", messages[i], pthread_self());
-        sleep(2);
+        
     }
     return NULL;
 }

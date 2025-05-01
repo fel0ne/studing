@@ -1,7 +1,8 @@
 {
     "files.associations": {
         "time.h": "c",
-        "lab9": "c"
+        "lab9": "c",
+        "stdio.h": "c"
     },
     "cmake.sourceDirectory": "/home/felone/studing/C_programming_2_semestr!/lab6"
 }

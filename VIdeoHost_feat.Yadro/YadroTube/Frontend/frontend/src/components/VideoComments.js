@@ -1,5 +1,5 @@
 // src/components/VideoComments.js
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react'; // --- ДОБАВЛЕНО: useRef ---
 import axios from 'axios';
 // Если нужен переход на страницу входа при ошибке 401, импортируйте useNavigate или Link
 // import { useNavigate, Link } from 'react-router-dom';
@@ -15,6 +15,9 @@ const VideoComments = ({ videoId, isLoggedIn }) => {
     const [error, setError] = useState(''); // Состояние ошибки (для загрузки и отправки)
     const [posting, setPosting] = useState(false); // Состояние отправки нового комментария
 
+    // --- ДОБАВЛЕНО: Создаем реф для DOM-элемента списка комментариев ---
+    const commentsListRef = useRef(null);
+
     // Если нужен useNavigate для перенаправления при 401 ошибке
     // const navigate = useNavigate();
 
@@ -23,31 +26,56 @@ const VideoComments = ({ videoId, isLoggedIn }) => {
         const fetchComments = async () => {
             try {
                 // GET запрос для получения комментариев. Доступен всем.
-                const response = await axios.get(`http://localhost:8000/api/videos/${videoId}/comments/`); // <-- URL вашего API для комментариев
-                // Предполагается, что бэкенд возвращает комментарии, отсортированные по дате (от старых к новым по умолчанию модели Comment)
-                // Если нужна сортировка от новых к старым на фронтенде:
-                // setComments(response.data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at)));
-                 setComments(response.data); // Используем сортировку с бэкенда
+                // Используем process.env.REACT_APP_API_URL для гибкости (если настроено)
+                // Иначе используем localhost:8000 (для разработки без .env)
+                const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000/api';
+                const response = await axios.get(`${apiUrl}/videos/${videoId}/comments/`); // <-- URL вашего API для комментариев
+                // Предполагается, что бэкенд возвращает комментарии, отсортированные по дате
+                // Бэкенд должен возвращать комментарии ОТ СТАРЫХ К НОВЫМ для корректного отображения с прокруткой вниз
+                // Если бэкенд отдает от новых к старым, вам нужно будет отсортировать их здесь:
+                // setComments(response.data.sort((a, b) => new Date(a.created_at) - new Date(b.created_at)));
+                 setComments(response.data); // Обновляем список комментариев (предполагая сортировку с бэкенда)
+
             } catch (err) {
                 console.error("Ошибка загрузки комментариев:", err.response || err);
-                setError('Не удалось загрузить комментарии.');
+                // Устанавливаем ошибку загрузки только если список пуст (чтобы не стирать существующие комменты)
+                if (comments.length === 0) {
+                    setError('Не удалось загрузить комментарии.');
+                }
             } finally {
-                setLoading(false);
+                // Устанавливаем loading в false только после первой загрузки или ошибки без комментов
+                if (loading) setLoading(false);
             }
         };
 
-        fetchComments();
+        fetchComments(); // Первоначальная загрузка при монтировании или смене видеоId
 
-        // TODO (Опционально): Реализовать WebSockets здесь для обновлений в реальном времени
-        // Подключиться к WebSocket для получения новых комментариев по videoId
+        // --- Реализация Поллинга ---
+        // Устанавливаем интервал для периодической загрузки комментариев (например, каждые 5 секунд)
+        const pollingInterval = setInterval(fetchComments, 5000); // 5000 миллисекунд = 5 секунд
 
-        // TODO (Опционально): Функция очистки для отключения WebSocket при размонтировании компонента
-        // return () => {
-        //   Отключить WebSocket
-        // };
+        // --- Функция очистки ---
+        // Обязательно очищаем интервал при размонтировании компонента или при изменении videoId
+        // чтобы избежать утечек памяти и лишних запросов
+        return () => {
+            clearInterval(pollingInterval); // Останавливаем поллинг
+        };
+        // --- Конец Поллинга ---
 
-    }, [videoId]); // Зависимости хука: перезагружаем комментарии при смене videoId
-    // Если используете navigate в useEffect, добавьте его в зависимости: [videoId, navigate]
+
+    // Зависимости хука useEffect для поллинга.
+    // [videoId] - чтобы перезапустить поллинг при смене видео.
+    }, [videoId]);
+
+
+    // --- ДОБАВЛЕНО: Эффект для прокрутки списка комментариев вниз ---
+    useEffect(() => {
+        // Прокручиваем список вниз каждый раз, когда меняется массив comments
+        if (commentsListRef.current) {
+            commentsListRef.current.scrollTop = commentsListRef.current.scrollHeight;
+        }
+    }, [comments]); // Этот эффект срабатывает при любом изменении массива comments (включая добавление нового или загрузку через поллинг)
+    // --- Конец добавленного эффекта ---
 
 
     // Обработчик отправки нового комментария
@@ -56,11 +84,11 @@ const VideoComments = ({ videoId, isLoggedIn }) => {
         // Проверяем, что поле ввода не пустое после удаления пробелов
         const trimmedComment = newCommentText.trim();
         if (!trimmedComment) {
-             setError('Комментарий не может быть пустым.'); // Установим сообщение об ошибке
-             setTimeout(() => setError(''), 3000); // Сбросим ошибку через 3 секунды
-             return; // Прерываем функцию
+            setError('Комментарий не может быть пустым.'); // Установим сообщение об ошибке
+            setTimeout(() => setError(''), 3000); // Сбросим ошибку через 3 секунды
+            return; // Прерываем функцию
         }
-        
+
         // Проверяем, авторизован ли пользователь перед отправкой (фронтенд-проверка)
         if (!isLoggedIn) {
             setError('Вы не авторизованы. Пожалуйста, войдите, чтобы оставить комментарий.');
@@ -74,7 +102,8 @@ const VideoComments = ({ videoId, isLoggedIn }) => {
 
         try {
             // POST запрос для создания нового комментария. Требуется аутентификация.
-            const response = await axios.post(`http://localhost:8000/api/videos/${videoId}/comments/`, { // <-- Тот же URL, но метод POST
+            const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:8000/api';
+            const response = await axios.post(`${apiUrl}/videos/${videoId}/comments/`, { // <-- Тот же URL, но метод POST
                 text: trimmedComment // Отправляем текст комментария (обрезаем пробелы)
                 // Бэкенд автоматически свяжет комментарий с видео и текущим авторизованным пользователем
             }, {
@@ -85,8 +114,8 @@ const VideoComments = ({ videoId, isLoggedIn }) => {
 
             // При успехе: добавляем новый комментарий в список и очищаем поле ввода
             // Предполагается, что бэкенд возвращает созданный объект комментария (включая id, автора и т.д.)
-            // Добавляем новый комментарий в начало списка для лучшего UX
-            setComments([response.data, ...comments]); // Добавляем в начало массива комментариев
+            // --- ИСПРАВЛЕНО: Добавляем новый комментарий В КОНЕЦ массива ---
+            setComments(prevComments => [...prevComments, response.data]); // Используем функцию обновления состояния для доступа к актуальным comments
             setNewCommentText(''); // Очищаем поле ввода
 
         } catch (err) {
@@ -94,20 +123,20 @@ const VideoComments = ({ videoId, isLoggedIn }) => {
             let errorMessage = 'Не удалось отправить комментарий.';
             // Обработка специфических ошибок с бэкенда (например, валидация или 401)
             if (err.response) {
-                 if (err.response.status === 401 || err.response.status === 403) {
-                     errorMessage = 'Вы не авторизованы или ваш токен истек. Пожалуйста, войдите снова.';
-                     // Опционально: удалить токены и перенаправить на логин
-                     // localStorage.removeItem('access_token');
-                     // localStorage.removeItem('refresh_token');
-                     // if (navigate) navigate('/login');
-                 } else if (err.response.data && err.response.data.text) {
-                     // Ошибки валидации по полю 'text' от бэкенда
-                     errorMessage = `Ошибка: ${err.response.data.text.join(', ')}`;
-                 } else if (err.response.data) {
-                      errorMessage = `Ошибка сервера: ${JSON.stringify(err.response.data)}`;
-                 } else {
-                      errorMessage = `Ошибка HTTP: ${err.response.status}`;
-                 }
+                if (err.response.status === 401 || err.response.status === 403) {
+                    errorMessage = 'Вы не авторизованы или ваш токен истек. Пожалуйста, войдите снова.';
+                    // Опционально: удалить токены и перенаправить на логин
+                    // localStorage.removeItem('access_token');
+                    // localStorage.removeItem('refresh_token');
+                    // if (navigate) navigate('/login');
+                } else if (err.response.data && err.response.data.text) {
+                    // Ошибки валидации по полю 'text' от бэкенда
+                    errorMessage = `Ошибка: ${err.response.data.text.join(', ')}`;
+                } else if (err.response.data) {
+                    errorMessage = `Ошибка сервера: ${JSON.stringify(err.response.data)}`;
+                } else {
+                    errorMessage = `Ошибка HTTP: ${err.response.status}`;
+                }
             }
             setError(errorMessage); // Устанавливаем сообщение об ошибке
             // Ошибка не сбрасывается автоматически, чтобы пользователь мог ее прочитать
@@ -129,9 +158,9 @@ const VideoComments = ({ videoId, isLoggedIn }) => {
             {/* Заголовок с количеством комментариев */}
             <h3 className="comments-title">Комментарии ({comments.length})</h3> {/* Применяем CSS класс */}
 
-            {/* Блок для отображения списка комментариев (с прокруткой) */}
-            <div className="comments-list"> {/* Применяем CSS класс */}
-                
+            {/* --- ДОБАВЛЕНО: Привязываем реф к блоку списка комментариев --- */}
+            <div className="comments-list" ref={commentsListRef}> {/* Применяем CSS класс */}
+
                 {/* Сообщение, если комментариев нет */}
                 {comments.length === 0 && !loading && !error && (
                     <p className="no-comments">Комментариев пока нет.</p> // Применяем CSS класс
@@ -139,18 +168,21 @@ const VideoComments = ({ videoId, isLoggedIn }) => {
 
                 {/* Отображение каждого комментария */}
                 {comments.map(comment => (
+                    // Убедитесь, что бэкенд возвращает уникальный comment.id
                     <div key={comment.id} className="comment-item"> {/* Применяем CSS класс */}
                         {/* Используем comment.author напрямую для отображения имени пользователя */}
                         <strong className="comment-author">{comment.author || 'Аноним'}:</strong> {comment.text} {/* Применяем CSS класс */}
                         {/* Дата и время комментария */}
                         <div className="comment-timestamp"> {/* Применяем CSS класс */}
-                            {new Date(comment.created_at).toLocaleString()} {/* Предполагается поле 'created_at' */}
+                            {/* Предполагается поле 'created_at' в формате, который может распарсить new Date() */}
+                            {/* Например, "2023-10-27T10:00:00Z" */}
+                            {new Date(comment.created_at).toLocaleString()}
                         </div>
                     </div>
                 ))}
 
-                 {/* Отображаем ошибку загрузки списка, если она была и комментариев нет */}
-                 {error && !comments.length && <div className="comments-error-list">{error}</div>} {/* Применяем CSS класс */}
+                {/* Отображаем ошибку загрузки списка, если она была и комментариев нет */}
+                {error && !comments.length && <div className="comments-error-list">{error}</div>} {/* Применяем CSS класс */}
             </div>
 
             {/* Форма для добавления нового комментария (отображается только если пользователь авторизован) */}
@@ -180,15 +212,15 @@ const VideoComments = ({ videoId, isLoggedIn }) => {
                 </form>
             ) : (
                 //{/* Сообщение для неавторизованных пользователей */}
-                <div className="login-prompt"> {/* Применяем CSS класс */}
+                <div className="login-prompt">
                     <p>Войдите, чтобы оставить комментарий.</p>
                     {/* Опционально: Ссылка на страницу входа */}
-                    {/* Если используете Link из react-router-dom */}
-                    {/* <Link to="/login" className="login-link">Войти</Link> */} {/* Применяем CSS класс */}
+                    {/* Если используете Link из react-router-dom, раскомментируйте: */}
+                    {/* <Link to="/login" className="login-link">Войти</Link> */}
                 </div>
             )}
         </div>
     );
-};
+}; // <-- Здесь удалена лишняя точка с запятой
 
 export default VideoComments;
