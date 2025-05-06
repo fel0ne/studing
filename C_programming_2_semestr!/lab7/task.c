@@ -3,17 +3,19 @@
 #include <pthread.h>
 #include <unistd.h>
 #define NUM_THREADS 4
-void  *messagedeth(a){
-    
+void  messagedeth(void * arg){
+    printf("death: %ld\n", (unsigned long)arg);
 }
 
 void *routine(void *arg) {
+    pthread_cleanup_push(messagedeth, (void*)pthread_self());
     char **messages = (char **)arg;
     for (int i = 0; messages[i] != NULL; i++) {
         sleep(3);
         printf("%s (TID: %ld)\n", messages[i], pthread_self());
-        
+        //pthread_testcancel(); 
     }
+    pthread_cleanup_pop(1);
     return NULL;
 }
 
@@ -27,7 +29,6 @@ int main(void) {
     };
 
     pthread_t threads[NUM_THREADS];
-
     // Создание потоков
     for (int i = 0; i < NUM_THREADS; i++) {
         pthread_create(&threads[i], NULL, routine, (void*)thread_data[i]);

@@ -1,7 +1,7 @@
 # api/serializers.py
 
 from rest_framework import serializers
-from .models import Video # Убедитесь, что этот импорт нужен, если VideoSerializer здесь
+from .models import Video 
 from .models import Comment
 from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
@@ -13,7 +13,7 @@ from django.core.exceptions import ValidationError
 # from django.conf import settings
 # REQUIRED_ACCESS_CODE = settings.REGISTRATION_ACCESS_CODE
 REQUIRED_ACCESS_CODE = "RGZ2025IKS431"
-# --- Конец определения кода ---
+
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -34,8 +34,7 @@ class VideoSerializer(serializers.ModelSerializer):
             'id',
             'title',
             'description',
-            # 'file', # <-- УДАЛЕНО: Модель имеет поле 'video', а не 'file' - Оставлено как комментарий из вашего кода
-            'video', # <-- ОСТАВЛЕНО: Это имя поля в вашей модели Video
+            'video', 
             'file_url', # Поле для полного URL файла видео (SerializerMethodField)
             'author', # Поле автора (ForeignKey)
             'author_username', # Поле username автора (ReadOnlyField)
@@ -78,12 +77,11 @@ class RegistrationSerializer(serializers.ModelSerializer):
         style={'input_type': 'password'},
         required=True
     )
-    # --- ДОБАВЛЕНО: Поле для кода доступа ---
+
     access_code = serializers.CharField(
         write_only=True, # Поле только для записи (не будет в ответе API)
         required=True    # Поле обязательно для регистрации
     )
-    # --- Конец добавленного поля ---
 
 
     class Meta:
@@ -109,30 +107,24 @@ class RegistrationSerializer(serializers.ModelSerializer):
              # Используем serializers.ValidationError
              raise serializers.ValidationError({"email": "Этот email уже используется"})
 
-        # --- ДОБАВЛЕНО: Проверка кода доступа ---
         provided_code = attrs.get('access_code')
 
         # Проверяем, был ли код предоставлен и совпадает ли он с требуемым
         if not provided_code or provided_code != REQUIRED_ACCESS_CODE:
             # Возвращаем ошибку валидации для поля access_code
             raise serializers.ValidationError({"access_code": "Неверный или отсутствует код доступа."})
-        # --- Конец добавленной проверки ---
-
-
-        # Если все проверки пройдены, возвращаем валидированные данные
+       
         # attrs.pop('password2', None) # Можно удалить password2 здесь
         # attrs.pop('access_code', None) # Можно удалить access_code здесь
 
         return attrs # Возвращаем валидированные данные
 
-    # Переопределяем метод create для создания пользователя
+    # определяем метод create для создания пользователя
     def create(self, validated_data):
-        # --- ДОБАВЛЕНО: Удаляем поля, которых нет в модели User ---
-        # Удаляем password2 и access_code из validated_data, т.к. их нет в модели User
+    
         validated_data.pop('password2', None)
-        validated_data.pop('access_code', None) # Удаляем поле кода доступа
-        # --- Конец удаления полей ---
-
+        validated_data.pop('access_code', None) 
+    
         # Создаем пользователя с помощью create_user (автоматически хэширует пароль)
         user = User.objects.create_user(**validated_data)
         return user
@@ -145,15 +137,3 @@ class CommentSerializer(serializers.ModelSerializer):
         fields = ['id', 'video', 'author', 'text', 'created_at']
         read_only_fields = ['id', 'video', 'author', 'created_at']
 
-    # Метод create не всегда нужен для простых POST запросов,
-    # ViewSet может автоматически связать поля, но можно переопределить,
-    # чтобы установить видео и автора из контекста запроса.
-
-    # Пример переопределения create (если не используете ViewSet или нужен контроль):
-    # def create(self, validated_data):
-    #    # Получаем объект видео из URL (через lookup_field в View)
-    #    video_id = self.context['view'].kwargs['video_id']
-    #    video = Video.objects.get(pk=video_id)
-    #    validated_data['video'] = video
-    #    validated_data['author'] = self.context['request'].user
-    #    return super().create(validated_data)
