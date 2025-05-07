@@ -24,7 +24,7 @@ void *routine(void *arg) {
             pthread_mutex_lock(&mutex);
             if (turn == 1) break;
             pthread_mutex_unlock(&mutex);
-           ///usleep(100);  // Короткая пауза, чтобы не нагружать CPU
+            usleep(100);  // Короткая пауза, чтобы не нагружать CPU
         }
         
         printf("%s (TID: %ld)\n", messages[i], pthread_self());
@@ -85,5 +85,5 @@ int main(void) {
     // Уничтожение мьютекса
     pthread_mutex_destroy(&mutex);
 
-    return 0;
+
 }
