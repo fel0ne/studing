@@ -4,7 +4,8 @@
         "lab9": "c",
         "stdio.h": "c",
         "check.h": "c",
-        "float.h": "c"
+        "float.h": "c",
+        "string.h": "c"
     },
     "cmake.sourceDirectory": "/home/felone/studing/C_programming_2_semestr!/lab6"
 }

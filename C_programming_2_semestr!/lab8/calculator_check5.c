@@ -107,7 +107,7 @@ int main(void) {
     s = calculator_suite();
     sr = srunner_create(s);
 
-    srunner_set_log(sr, custom_log_set_handler);
+    srunner_set_log_handler(sr, "/tmp/log.txt");
     srunner_run_all(sr, CK_NOFORK); // Или CK_SILENT
 
     number_failed = srunner_ntests_failed(sr);

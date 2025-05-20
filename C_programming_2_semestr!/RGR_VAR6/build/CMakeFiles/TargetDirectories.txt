@@ -1,0 +1,15 @@
+/home/felone/studing/C_programming_2_semestr!/RGR_VAR6/build/CMakeFiles/test.dir
+/home/felone/studing/C_programming_2_semestr!/RGR_VAR6/build/CMakeFiles/edit_cache.dir
+/home/felone/studing/C_programming_2_semestr!/RGR_VAR6/build/CMakeFiles/rebuild_cache.dir
+/home/felone/studing/C_programming_2_semestr!/RGR_VAR6/build/CEZAR/CMakeFiles/cezar_library.dir
+/home/felone/studing/C_programming_2_semestr!/RGR_VAR6/build/CEZAR/CMakeFiles/test.dir
+/home/felone/studing/C_programming_2_semestr!/RGR_VAR6/build/CEZAR/CMakeFiles/edit_cache.dir
+/home/felone/studing/C_programming_2_semestr!/RGR_VAR6/build/CEZAR/CMakeFiles/rebuild_cache.dir
+/home/felone/studing/C_programming_2_semestr!/RGR_VAR6/build/APP/CMakeFiles/cezar_app.dir
+/home/felone/studing/C_programming_2_semestr!/RGR_VAR6/build/APP/CMakeFiles/test.dir
+/home/felone/studing/C_programming_2_semestr!/RGR_VAR6/build/APP/CMakeFiles/edit_cache.dir
+/home/felone/studing/C_programming_2_semestr!/RGR_VAR6/build/APP/CMakeFiles/rebuild_cache.dir
+/home/felone/studing/C_programming_2_semestr!/RGR_VAR6/build/TESTs/CMakeFiles/run_tests.dir
+/home/felone/studing/C_programming_2_semestr!/RGR_VAR6/build/TESTs/CMakeFiles/test.dir
+/home/felone/studing/C_programming_2_semestr!/RGR_VAR6/build/TESTs/CMakeFiles/edit_cache.dir
+/home/felone/studing/C_programming_2_semestr!/RGR_VAR6/build/TESTs/CMakeFiles/rebuild_cache.dir
