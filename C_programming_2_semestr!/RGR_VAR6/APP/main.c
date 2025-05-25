@@ -54,7 +54,7 @@ int main(int argc, char* argv[]) {
     }
 
 
-    // Открываем file2 для записи дешифрованного текста
+   
     file2 = fopen(argv[2], "w");
     if (file2 == NULL) {
         printf("file2: Не удалось открыть для записи.\n");

@@ -6,7 +6,7 @@
 #include <string.h> // Для wcscpy и wcslen
 #include <locale.h> // Для setlocale
 
-// Простая макросная обертка для ассертов
+
 #define ASSERT_WCS_EQUAL(expected, actual, message) \
     do { \
         if (actual == NULL || wcscmp(expected, actual) != 0) { \
@@ -15,7 +15,7 @@
             wprintf(L"  Получено:  \"%ls\"\n", actual ? actual : L"(NULL)"); \
             test_failures++; \
         } else { \
-            /* wprintf(L"УСПЕХ: %s\n", message); */ \
+            wprintf(L"УСПЕХ: %s\n", message);  \
             test_successes++; \
         } \
     } while (0)
