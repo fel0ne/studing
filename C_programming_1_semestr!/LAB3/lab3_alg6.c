@@ -1,5 +1,5 @@
 #include <stdio.h>
-//  prostoe chi ne prostoe
+//  prostoe chi ne prostoefdfgd
 int main() {
 	int a ;
 	scanf("%d", &a);
