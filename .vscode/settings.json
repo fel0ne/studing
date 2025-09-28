@@ -5,7 +5,8 @@
         "stdio.h": "c",
         "check.h": "c",
         "float.h": "c",
-        "string.h": "c"
+        "string.h": "c",
+        "iostream": "cpp"
     },
     "cmake.sourceDirectory": "/home/felone/studing/C_programming_2_semestr!/lab6"
 }
