@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Обратная связь</title>
+    <style>
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; }
+        input, textarea { width: 300px; padding: 5px; }
+        .required { color: red; }
+        .error { color: red; font-size: 12px; }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/">Главная</a> |
+        <a href="/about">О нас</a> |
+        <a href="/services">Услуги</a> |
+        <a href="/contact">Контакты</a> |
+        <a href="/form">Обратная связь</a>
+    </nav>
+    
+    <h1>Форма обратной связи</h1>
+    
+    <form method="POST" action="/submit-form">
+        <div class="form-group">
+            <label for="name">Имя <span class="required">*</span></label>
+            <input type="text" id="name" name="name" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="email">Email <span class="required">*</span></label>
+            <input type="email" id="email" name="email" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="subject">Тема сообщения</label>
+            <input type="text" id="subject" name="subject">
+        </div>
+        
+        <div class="form-group">
+            <label for="message">Текст сообщения</label>
+            <textarea id="message" name="message" rows="5"></textarea>
+        </div>
+        
+        <button type="submit">Отправить</button>
+    </form>
+</body>
+</html>
