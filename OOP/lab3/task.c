@@ -87,18 +87,16 @@ int main(){
         cout << "Количество студентов: " << studentCount << endl;
         
         Student students[studentCount]; 
-        
+        string name;
+        float grades[10];
         for (int i = 0; i < studentCount; i++) {
-            string name;
-
+            
             if (!getline(File, name)) {
                 cerr << "Ошибка чтения имени студента " << i+1 << endl;
                 break;
             }
             students[i].setName(name);
             
-  
-            float grades[10];
             for (int j = 0; j < 10; j++) {
                 if (!(File >> grades[j])) {
                     cerr << "Ошибка чтения оценки " << j+1 << " для студента " << i+1 << endl;
@@ -130,8 +128,13 @@ int main(){
         
         
         for (int i = 0; i < studentCount; i++) {
-            File.write((char*)&students[i],sizeof(students[i]))s;
+            File.write((char*)&students[i],sizeof(students[i]));
+            //float average =students[i].calculateAverage();
+            //File.write((char*)&average,sizeof(students[i].calculateAverage()));
+
         }
+
+        
         
         
     } else {
