@@ -7,7 +7,7 @@ using namespace std;
 class Airport {
 public:
     char name[100]; 
-    char place[100];
+    char place[100];  
     int count;
     char status[100];
     

@@ -1,0 +1,150 @@
+openapi: 3.0.3
+info:
+  title: API Электронной библиотеки
+  description: API для управления каталогом книг.
+  version: 1.0.0
+servers:
+  - url: http://127.0.0.1:8000
+    description: Локальный сервер для разработки
+
+paths:
+  /books/:
+    get:
+      tags:
+        - books
+      summary: Получить список всех книг
+      description: Возвращает массив всех книг в библиотеке. Поддерживает фильтрацию по автору.
+      parameters:
+        - name: author
+          in: query
+          description: Фильтр по автору книги
+          required: false
+          schema:
+            type: string
+          example: "Булгаков"
+      responses:
+        '200':
+          description: Успешный ответ со списком книг
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Book'
+    post:
+      tags:
+        - books
+      summary: Добавить новую книгу
+      description: Создает новую запись о книге в библиотеке.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Book'
+      responses:
+        '200':
+          description: Книга успешно добавлена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+        '400':
+          description: Книга с таким ID уже существует
+
+  /books/{book_id}:
+    get:
+      tags:
+        - books
+      summary: Получить книгу по ID
+      description: Возвращает информацию о конкретной книге по её уникальному идентификатору.
+      parameters:
+        - name: book_id
+          in: path
+          description: ID книги для получения
+          required: true
+          schema:
+            type: integer
+          example: 1
+      responses:
+        '200':
+          description: Успешный ответ с данными книги
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+        '404':
+          description: Книга не найдена
+    put:
+      tags:
+        - books
+      summary: Обновить информацию о книге
+      description: Обновляет информацию о существующей книге по её ID.
+      parameters:
+        - name: book_id
+          in: path
+          description: ID книги для обновления
+          required: true
+          schema:
+            type: integer
+          example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Book'
+      responses:
+        '200':
+          description: Книга успешно обновлена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+        '404':
+          description: Книга не найдена
+    delete:
+      tags:
+        - books
+      summary: Удалить книгу
+      description: Удаляет книгу из библиотеки по её ID.
+      parameters:
+        - name: book_id
+          in: path
+          description: ID удаляемой книги
+          required: true
+          schema:
+            type: integer
+          example: 1
+      responses:
+        '200':
+          description: Книга успешно удалена
+        '404':
+          description: Книга не найдена
+
+components:
+  schemas:
+    Book:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Уникальный идентификатор книги
+          example: 1
+        title:
+          type: string
+          description: Название книги
+          example: "Мастер и Маргарита"
+        author:
+          type: string
+          description: Автор книги
+          example: "Михаил Булгаков"
+        publication_year:
+          type: integer
+          description: Год публикации
+          example: 1967
+      required:
+        - id
+        - title
+        - author
+        - publication_year

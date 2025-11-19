@@ -9,7 +9,7 @@ class Pharmacy{
         string work_time;
     
 
-        //----constructor without parameters----
+  
         Pharmacy(){
             name =  "";
             phone_num = "";
@@ -17,7 +17,7 @@ class Pharmacy{
             work_time = "";
         }
 
-        //----constructor with parameters------
+
         Pharmacy(string tname, string tphone_num, 
         string taddress, string twork_time){
             name = tname;
@@ -59,6 +59,14 @@ class PrivatePharmacy : public Pharmacy{
         }
 
 
+        PrivatePharmacy(){
+            name =  "";
+            admin_name = "";
+            phone_num = "";
+            address = "";
+            work_time = "";
+        }
+
         
         //----setters----
         void setAdminName(string tadmin_name){ admin_name = tadmin_name; }
@@ -77,20 +85,26 @@ class PrivatePharmacy : public Pharmacy{
 
 
 int main(){
-    Pharmacy DA;
+    Pharmacy DA = Pharmacy("prosto","45","adrr","8^00  9^00");
 
-    PrivatePharmacy prosto =  PrivatePharmacy("prosto","pavel","45","adrr","8^00  9^00");
+    PrivatePharmacy prosto;
     cout<<endl;
 
     prosto.outputTo();
 
     cout<<endl;
 
-    prosto.setName("prosto");
-    prosto.setAdminName("pavel");
-    prosto.setPhoneNum("+79130077284");
-    prosto.setAddress("adriena lezhena 15");
-    prosto.setWorkTime("8:00 - 18:00");
+    string temp;
+    cin>>temp;
+    prosto.setName(temp);
+    cin>>temp;
+    prosto.setAdminName(temp);
+    cin>>temp;
+    prosto.setPhoneNum(temp);
+    cin>>temp;
+    prosto.setAddress(temp);
+    cin>>temp;
+    prosto.setWorkTime(temp);
 
     DA.outputTo();
     cout<<endl;

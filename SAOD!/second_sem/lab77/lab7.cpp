@@ -305,7 +305,6 @@ void DBD(int data, Vertex* &p)
         p->Left = p->Right = NULL;
         p->bal = 0;
         vr = 1;
-        hr = 1;
     }
     else if (p->Data > data) {
         DBD(data, p->Left);
@@ -321,8 +320,8 @@ void DBD(int data, Vertex* &p)
             }
             else {
                 p->bal = 0;
-                vr = 0;
-                hr = 1;
+                vr = 1;
+                hr = 0;
             }
         }
         else {
@@ -337,28 +336,28 @@ void DBD(int data, Vertex* &p)
             hr = 1;
         }
         else if (hr == 1) {
-            if (p->bal > 0) {
+            if (p->bal == 1) {
 
                 Vertex *q = p->Right;
+                p->bal = 0;
                 p->Right = q->Left;
                 q->Left = p;
-                p->bal = 0;
-                q->bal = 0;
                 p = q;
+                q->bal = 0;
+                
                 vr = 1;
                 hr = 0;
             }
             else {
-                p->bal = 0;
                 hr = 0;
             }
         }
     }
-    else {
-        // Обработка дубликатов (если значение уже существует)
-        hr = 0;
-        vr = 0;
-    }
+    // else {
+    //     // Обработка дубликатов (если значение уже существует)
+    //     hr = 0;
+    //     vr = 0;
+    // }
 }
 int main(){
      srand(time(NULL));

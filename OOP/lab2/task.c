@@ -11,7 +11,6 @@
 #ifndef M_SQRT3
 #define M_SQRT3 1.7320508075688772935274463415059 
 #endif
-
 using namespace std;
 
 

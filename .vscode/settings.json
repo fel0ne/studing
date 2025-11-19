@@ -8,7 +8,9 @@
         "string.h": "c",
         "iostream": "cpp",
         "limits": "cpp",
-        "ostream": "cpp"
+        "ostream": "cpp",
+        "cstdio": "cpp",
+        "fstream": "cpp"
     },
     "cmake.sourceDirectory": "/home/felone/studing/C_programming_2_semestr!/lab6"
 }
