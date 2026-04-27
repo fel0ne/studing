@@ -1,6 +1,5 @@
 Пример запросов через curl
 
-Регистрация (вам нужно реализовать свою регистрацию, так как стандартная JWT не включает эту функциональность):
 
 bash
 curl -X POST http://localhost:8000/api/auth/register/ -H "Content-Type: application/json" -d '{"username": "user", "password": "pass"}'
